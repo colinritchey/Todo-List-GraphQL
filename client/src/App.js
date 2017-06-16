@@ -2,25 +2,70 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
-const TodoList = () => {
+import {
+  ApolloClient,
+  gql,
+  graphql,
+  ApolloProvider,
+} from 'react-apollo';
+
+import {
+  makeExecutableSchema,
+  addMockFunctionsToSchema
+} from 'graphql-tools';
+
+import { mockNetworkInterfaceWithSchema } from 'apollo-test-utils';
+import { typeDefs } from './schema';
+
+const schema = makeExecutableSchema({ typeDefs });
+
+addMockFunctionsToSchema({ schema });
+
+const mockNetworkInterface = mockNetworkInterfaceWithSchema({ schema });
+
+const client = new ApolloClient({
+  networkInterface: mockNetworkInterface,
+});
+
+const TodoList = ({ data: {loading, error, todolists }}) => {
+  if(loading){
+    return <p>Loading...</p>
+  }
+
+  if(error){
+    return <p>{error.message}</p>
+  }
+
   return (
     <ul>
-      <li>List 1</li>
-      <li>List 2</li>
+      { todolists.map(list => <li key={list.id} >{list.name}</li>) }
     </ul>
   );
 }
 
+const todosListQuery = gql`
+  query TodoListQuery {
+    todolists {
+      id
+      name
+    }
+  }
+`;
+
+const TodoListWithData = graphql(todosListQuery)(TodoList);
+
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to A TodoList</h2>
+      <ApolloProvider client={client}>
+        <div className="App">
+          <div className="App-header">
+            <img src={logo} className="App-logo" alt="logo" />
+            <h2>Welcome to Apollo</h2>
+          </div>
+          <TodoListWithData />
         </div>
-        <TodoList/>
-      </div>
+      </ApolloProvider>
     );
   }
 }
