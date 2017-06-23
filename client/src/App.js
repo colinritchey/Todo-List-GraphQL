@@ -7,52 +7,18 @@ import {
   gql,
   graphql,
   ApolloProvider,
+  createNetworkInterface
 } from 'react-apollo';
 
-import {
-  makeExecutableSchema,
-  addMockFunctionsToSchema
-} from 'graphql-tools';
+import TodoListWithData from './components/TodoList';
 
-import { mockNetworkInterfaceWithSchema } from 'apollo-test-utils';
-import { typeDefs } from './schema';
-
-const schema = makeExecutableSchema({ typeDefs });
-
-addMockFunctionsToSchema({ schema });
-
-const mockNetworkInterface = mockNetworkInterfaceWithSchema({ schema });
-
-const client = new ApolloClient({
-  networkInterface: mockNetworkInterface,
+const networkInterface = createNetworkInterface({
+  uri: 'http://localhost:4000/graphql'
 });
 
-const TodoList = ({ data: {loading, error, todolists }}) => {
-  if(loading){
-    return <p>Loading...</p>
-  }
-
-  if(error){
-    return <p>{error.message}</p>
-  }
-
-  return (
-    <ul>
-      { todolists.map(list => <li key={list.id} >{list.name}</li>) }
-    </ul>
-  );
-}
-
-const todosListQuery = gql`
-  query TodoListQuery {
-    todolists {
-      id
-      name
-    }
-  }
-`;
-
-const TodoListWithData = graphql(todosListQuery)(TodoList);
+const client = new ApolloClient({
+  networkInterface,
+});
 
 class App extends Component {
   render() {

@@ -14,13 +14,11 @@ const typeDefs = `
   type Query {
     todolists: [TodoList]
   }
+
+  type Mutation {
+    addTodoList(name: String!): TodoList
+  }
 `;
 
 const schema = makeExecutableSchema({ typeDefs, resolvers });
 export { schema };
-
-// const schema = makeExecutableSchema({ typeDefs });
-//
-// addMockFunctionsToSchema({ schema });
-
-// export { schema };
