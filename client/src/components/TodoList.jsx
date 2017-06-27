@@ -17,11 +17,12 @@ const TodoList = ({ data: {loading, error, todolists }}) => {
   }
 
   return (
-    <div className="channelsList">
+    <div className="todoList">
       <AddTodoList />
-      <ul>
-        { todolists.map(list => <li key={list.id} className="channel">{list.name}</li>) }
-      </ul>
+
+        { todolists.map(list => <div key={list.id} className={'todos '+
+          (list.id < 0 ? 'optimistic' : '')}>{list.name}</div>) }
+
     </div>
   );
 }
