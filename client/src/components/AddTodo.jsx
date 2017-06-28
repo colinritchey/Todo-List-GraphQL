@@ -5,6 +5,7 @@ import {
 } from 'react-apollo';
 
 import { todoListDetailsQuery } from './TodoListDetail';
+import { withRouter } from 'react-router';
 
 const AddTodo = ({ mutate, match }) => {
   const handleKeyPress = (e) => {
@@ -12,14 +13,14 @@ const AddTodo = ({ mutate, match }) => {
       e.persist();
       mutate({
         variables: {
-          message: {
-            todoListId: match.params.todoListId,
+          todo: {
+            todolistId: match.params.todoListId,
             text: e.target.value
           }
         },
         optimisticResponse: {
          addTodo: {
-           name: e.target.value,
+           text: e.target.value,
            id: Math.round(Math.random() * -1000000),
            __typename: 'Todo',
          },
@@ -32,7 +33,7 @@ const AddTodo = ({ mutate, match }) => {
              todoListId: match.params.todoListId,
            }
          });
-         data.todoList.messages.push(addTodo);
+         data.todolist.todos.push(addTodo);
          store.writeQuery({
            query: todoListDetailsQuery,
            variables: {
@@ -58,8 +59,8 @@ const AddTodo = ({ mutate, match }) => {
 }
 
 const addTodoMutation = gql`
-  mutation addTodo($text: TodoInput!) {
-    addTodo(text: $text) {
+  mutation addTodo($todo: TodoInput!) {
+    addTodo(todo: $todo) {
       id
       text
     }
@@ -69,6 +70,6 @@ const addTodoMutation = gql`
 
 const AddTodoWithMutation = graphql(
   addTodoMutation
-)(AddTodo);
+)(withRouter(AddTodo));
 
 export default AddTodoWithMutation;

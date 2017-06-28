@@ -40,7 +40,7 @@ export const resolvers = {
       return newTodoList;
     },
     addTodo: (root, { todo }) => {
-      const todoList = todolists.find(todoList => channel.id === todo.todoListId);
+      const todoList = todolists.find(todoList => todoList.id === parseInt(todo.todolistId));
       if(!todoList)
         throw new Error("TodoList does not exist");
       const newTodo = { id: String(nextTodoId++), text: todo.text };

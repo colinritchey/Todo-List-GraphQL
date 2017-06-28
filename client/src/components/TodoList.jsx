@@ -4,6 +4,10 @@ import {
   graphql
 } from 'react-apollo';
 
+import {
+  Link
+} from 'react-router-dom'
+
 import AddTodoList from './AddTodoList';
 
 const TodoList = ({ data: {loading, error, todolists }}) => {
@@ -21,7 +25,9 @@ const TodoList = ({ data: {loading, error, todolists }}) => {
       <AddTodoList />
 
         { todolists.map(list => <div key={list.id} className={'todos '+
-          (list.id < 0 ? 'optimistic' : '')}>{list.name}</div>) }
+          (list.id < 0 ? 'optimistic' : '')}>
+          <Link to={`todoList/${list.id}`}>{list.name}</Link>
+        </div>) }
 
     </div>
   );

@@ -44,7 +44,10 @@ class App extends Component {
               <img src={logo} className="App-logo" alt="logo" />
               <h2>Welcome to Apollo</h2>
             </div>
-            <Link to="/" className="navbar">React + GraphQL Tutorial</Link>
+            <div className="navbar">
+              <Link to="/" >React + GraphQL Tutorial</Link>
+            </div>
+
             <Switch>
               <Route exact path="/" component={TodoListWithData}/>
               <Route path="/todoList/:todoListId" component={TodoListDetail}/>
